@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: orders-postgres
+    image: postgres:14.6
+    ports:
+      - 54320:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  nats-streaming:
+    container_name: orders-nats-streaming
+    image: nats-streaming:0.25.2
+    ports:
+      - 4222:4222
+      - 8222:8222
+
+  orders-service:
+    container_name: orders-service
+    build: .
+    depends_on:
+      - postgres
+      - nats-streaming
+    command: ./service
+    ports:
+      - 8080:8080
+    environment:
+      PG_DSN: ${PG_DSN}
+      SERVER_ADDRESS: ${SERVER_ADDRESS}
+      NATS_URL: ${NATS_URL}
