@@ -32,4 +32,4 @@ run:
 	go run cmd/main.go
 
 send-test-message:
-	go run internal/nats/test-publisher/main.go
+	go run packages/nats/test-publisher/main.go
